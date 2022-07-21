@@ -58,14 +58,14 @@ let currentWeather = function(cityName) {
 
 
 let fiveDayForecast = function(cityName) {
-    // get and use data from open weather current weather api end point
+    //use data from open weather
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`)
-        // get response and turn it into objects
+        //  response into objects
         .then(function(response) {
             return response.json();
         })
         .then(function(response) {
-            // get city's longitude and latitude
+            // get city's long and lat
             let cityLon = response.coord.lon;
             let cityLat = response.coord.lat;
 
@@ -77,32 +77,32 @@ let fiveDayForecast = function(cityName) {
                 .then(function(response) {
                     console.log(response);
 
-                    // add 5 day forecast title
+                    
                     let futureForecastTitle = $("#future-forecast-heading");
-                    futureForecastTitle.text("5-Day Forecast:")
+                    futureForecastTitle.text("5-Day Forecast:");
 
-                    // using data from response, set up each day of 5 day forecast
+                    // 5 day forecast
                     for (let i = 1; i <= 5; i++) {
-                        // add class to future cards to create card containers
+                        
                         let futureCard = $(".future-forecastcard");
                         futureCard.addClass("future-card-details");
 
-                        // add date to 5 day forecast
+                        // date to forecast
                         let futureDate = $("#future-date-" + i);
                         date = moment().add(i, "d").format("M/D/YYYY");
                         futureDate.text(date);
 
-                        // add icon to 5 day forecast
+                        // icon to forecast
                         let futureIcon = $("#future-icon-" + i);
                         futureIcon.addClass("future-icon");
                         let futureIconCode = response.daily[i].weather[0].icon;
                         futureIcon.attr("src", `https://openweathermap.org/img/wn/${futureIconCode}@2x.png`);
 
-                        // add temp to 5 day forecast
+                        //  temp to forecast
                         let futureTemp = $("#future-temp-" + i);
                         futureTemp.text("Temp: " + response.daily[i].temp.day + " \u00B0F");
 
-                        // add humidity to 5 day forecast
+                        //  humidity to forecast
                         let futureHumidity = $("#future-humidity-" + i);
                         futureHumidity.text("Humidity: " + response.daily[i].humidity + "%");
                     }
@@ -110,12 +110,12 @@ let fiveDayForecast = function(cityName) {
         })
 };
 
-// called when the search form is submitted
+//  when the search form is submitted
 
 $("#search-form").on("submit", function() {
     event.preventDefault();
     
-    // get name of city searched
+    //  city name searched
     let cityName = $("#search-input").val();
 
     if (cityName === "" || cityName == null) {
@@ -127,9 +127,8 @@ $("#search-form").on("submit", function() {
 });
 
 
-// called when a search history entry is clicked
+
 $("#search-history-container").on("click", "p", function() {
-    // get text (city name) of entry and pass it as a parameter to display weather conditions
     let previousCityName = $(this).text();
     currentWeather(previousCityName);
     fiveDayForecast(previousCityName);
@@ -142,23 +141,19 @@ $("#search-history-container").on("click", "p", function() {
 
 
 
-// make list of previously searched cities
+//  list of previously searched cities
 const searchHistoryList = function(cityName) {
     $('.past-search:contains("' + cityName + '")').remove();
 
-    // create entry with city name
     let searchHistoryEntry = $("<p>");
     searchHistoryEntry.addClass("past-search");
     searchHistoryEntry.text(cityName);
 
-    // create container for entry
     let searchEntryContainer = $("<div>");
     searchEntryContainer.addClass("past-search-container");
 
-    // append entry to container
     searchEntryContainer.append(searchHistoryEntry);
 
-    // append entry container to search history container
     var searchHistoryContainerEl = $("#search-history-container");
     searchHistoryContainerEl.append(searchEntryContainer);
 
@@ -168,7 +163,6 @@ const searchHistoryList = function(cityName) {
         prevSearches = JSON.parse(prevSavedSearches);
     }
 
-    // add city name to array of saved searches
     prevSearches.push(cityName);
     localStorage.setItem("prevSearches", JSON.stringify(prevSearches));
 
@@ -177,7 +171,6 @@ const searchHistoryList = function(cityName) {
 
 };
 
-// load saved search history entries into search history container
 var loadSearchHistory = function() {
     // get saved search history
     var savedSearchHistory = localStorage.getItem("prevSearches");
